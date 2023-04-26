@@ -16,13 +16,13 @@ To be compliant with those validations, please follow the migration guide.
 
 > ⚠️ If you do not migrate your queries before the validations are rolled out, they will return errors and possibly break your frontends/clients.
 
-# Migration guide
+## Migration guide
 
 You can use the CLI migration tool to find any issues in your GraphQL operations and fix them. Alternatively you can update the endpoint of your GraphQL client to use the `https://api-next.thegraph.com/subgraphs/name/$GITHUB_USER/$SUBGRAPH_NAME` endpoint. Testing your queries against this endpoint will help you find the issues in your queries.
 
 > Not all subgraphs will need to be migrated, if you are using [GraphQL ESlint](https://the-guild.dev/graphql/eslint/docs) or [GraphQL Code Generator](https://the-guild.dev/graphql/codegen), they already ensure that your queries are valid.
 
-## Migration CLI tool
+### Migration CLI tool
 
 **Most of the GraphQL operations errors can be found in your codebase ahead of time.**
 
@@ -30,7 +30,7 @@ For this reason, we provide a smooth experience for validating your GraphQL oper
 
 [`@graphql-validate/cli`](https://github.com/saihaj/graphql-validate) is a simple CLI tool that helps validate GraphQL operations against a given schema.
 
-### **Getting started**
+#### **Getting started**
 
 You can run the tool as follows:
 
@@ -44,7 +44,7 @@ npx @graphql-validate/cli -s https://api-next.thegraph.com/subgraphs/name/$GITHU
 - The preview schema URL (https://api-next.thegraph.com/) provided is heavily rate-limited and will be sunset once all users have migrated to the new version. **Do not use it in production.**
 - Operations are identified in files with the following extensions [`.graphql`,](https://www.graphql-tools.com/docs/schema-loading#graphql-file-loader)[`.ts`, `.tsx`, `.js`, `jsx`](https://www.graphql-tools.com/docs/schema-loading#code-file-loader) (`-o` option).
 
-### CLI output
+#### CLI output
 
 The `[@graphql-validate/cli](https://github.com/saihaj/graphql-validate)` CLI tool will output any GraphQL operations errors as follows:
 
@@ -52,7 +52,7 @@ The `[@graphql-validate/cli](https://github.com/saihaj/graphql-validate)` CLI to
 
 For each error, you will find a description, file path and position, and a link to a solution example (see the following section).
 
-## Run your local queries against the preview schema
+### Run your local queries against the preview schema
 
 We provide an endpoint `https://api-next.thegraph.com/` that runs a `graph-node` version that has validations turned on.
 
@@ -66,11 +66,11 @@ or
 
 To work on queries that have been flagged as having validation errors, you can use your favorite GraphQL query tool, like Altair or [GraphiQL](https://cloud.hasura.io/public/graphiql), and try your query out. Those tools will also mark those errors in their UI, even before you run it.
 
-## How to solve issues
+### How to solve issues
 
 Below, you will find all the GraphQL validations errors that could occur on your existing GraphQL operations.
 
-### GraphQL variables, operations, fragments, or arguments must be unique
+#### GraphQL variables, operations, fragments, or arguments must be unique
 
 We applied rules for ensuring that an operation includes a unique set of GraphQL variables, operations, fragments, and arguments.
 
@@ -223,7 +223,7 @@ query SecondQuery {
 }
 ```
 
-### Overlapping Fields
+#### Overlapping Fields
 
 A GraphQL selection set is considered valid only if it correctly resolves the eventual result set.
 
@@ -310,7 +310,7 @@ fragment mergeSameFieldsWithSameDirectives on Dog {
 
 [You can read more about the algorithm here.](https://spec.graphql.org/June2018/#sec-Field-Selection-Merging)
 
-### Unused Variables or Fragments
+#### Unused Variables or Fragments
 
 A GraphQL operation is also considered valid only if all operation-defined components (variables, fragments) are used.
 
@@ -358,7 +358,7 @@ query something {
 # remove the `AllFields` fragment
 ```
 
-### Invalid or missing Selection-Set (#ScalarLeafsRule)
+#### Invalid or missing Selection-Set (#ScalarLeafsRule)
 
 Also, a GraphQL field selection is only valid if the following is validated:
 
@@ -430,7 +430,7 @@ query {
 }
 ```
 
-### Incorrect Arguments values (#VariablesInAllowedPositionRule)
+#### Incorrect Arguments values (#VariablesInAllowedPositionRule)
 
 GraphQL operations that pass hard-coded values to arguments must be valid, based on the value defined in the schema.
 
@@ -457,7 +457,7 @@ query purposes($name: Int!) {
 }
 ```
 
-### Unknown Type, Variable, Fragment, or Directive (#UnknownX)
+#### Unknown Type, Variable, Fragment, or Directive (#UnknownX)
 
 The GraphQL API will raise an error if any unknown type, variable, fragment, or directive is used.
 
@@ -466,7 +466,7 @@ Those unknown references must be fixed:
 - rename if it was a typo
 - otherwise, remove
 
-### Fragment: invalid spread or definition
+#### Fragment: invalid spread or definition
 
 **Invalid Fragment spread (#PossibleFragmentSpreadsRule)**
 
@@ -506,7 +506,7 @@ fragment inlineFragOnScalar on Dog {
 }
 ```
 
-### Directives usage
+#### Directives usage
 
 **Directive cannot be used at this location (#KnownDirectivesRule)**
 
